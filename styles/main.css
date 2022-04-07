@@ -32,13 +32,13 @@ header{
   height: 100%;
   justify-content: center;
   height: 600px;
-  width: 300px;
+  width: 600px;
 }
 
 .grid div {
   border: 1px solid lightgrey;
   flex-grow: 1;
-  height: 5%;
+  height: 10%;
   width: 10%;
 }
 
@@ -46,4 +46,9 @@ header{
 .o, .i, .j, .l, .t, .s, .z{
   border: 1px solid black !important; 
   background-color: blue !important; 
+}
+
+.dead{
+  border: 1px solid black !important; 
+  background-color: darkgray !important;
 }

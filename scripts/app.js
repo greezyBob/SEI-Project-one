@@ -6,15 +6,9 @@ function init() {
 
   //grid creation
   const width = 10
-  const height = 20
+  const height = 10
   const cellCount = width * height
   const cells = [] //this will hold all cells we create
-
-  //variables
-  let currentPosition = 0
-  let countTimer
-  let shapeType
-
 
   function createGrid() {
     // create all the cells using a loop
@@ -33,9 +27,17 @@ function init() {
   }
   createGrid()
 
+  //?variables
+  let currentPosition = 0
+  let countTimer
+  let shapeType
+  let shapeNode
+  let shape
 
-  //execute
+  //?execute
+  //shape generation
   function generateShape() {
+    clearInterval(countTimer)
     const rand = Math.floor(Math.random() * 7)
     if (rand === 0) {
       cells[4].classList.add('o')
@@ -43,102 +45,143 @@ function init() {
       cells[4 + width].classList.add('o')
       cells[4 + width + 1].classList.add('o')
       shapeType = 'o'
-      const shape = document.querySelectorAll('.o')
-      shape.forEach(block => {
-        currentPosition = block.id
-        fallDown(currentPosition)
-      })
+      shapeNode = document.querySelectorAll('.o')
+      shape = Array.from(shapeNode)
+      fallDown()
     } else if (rand === 1) {
       cells[4].classList.add('i')
       cells[4 + width].classList.add('i')
       cells[4 + (2 * width)].classList.add('i')
       cells[4 + (3 * width)].classList.add('i')
       shapeType = 'i'
-      const shape = document.querySelectorAll('.i')
-      shape.forEach(block => {
-        currentPosition = block.id
-        fallDown(currentPosition)
-      })
+      shapeNode = document.querySelectorAll('.i')
+      shape = Array.from(shapeNode)
+      fallDown()
     } else if (rand === 2) {
       cells[4].classList.add('l')
       cells[4 + width].classList.add('l')
       cells[4 + width - 1].classList.add('l')
       cells[4 + width - 2].classList.add('l')
       shapeType = 'l'
-      const shape = document.querySelectorAll('.l')
-      shape.forEach(block => {
-        currentPosition = block.id
-        fallDown(currentPosition)
-      })
+      shapeNode = document.querySelectorAll('.l')
+      shape = Array.from(shapeNode)
+      fallDown()
     } else if (rand === 3) {
       cells[4].classList.add('j')
       cells[4 + width].classList.add('j')
       cells[4 + width + 1].classList.add('j')
       cells[4 + width + 2].classList.add('j')
       shapeType = 'j'
-      const shape = document.querySelectorAll('.j')
-      shape.forEach(block => {
-        currentPosition = block.id
-        fallDown(currentPosition)
-      })
+      shapeNode = document.querySelectorAll('.j')
+      shape = Array.from(shapeNode)
+      fallDown()
     } else if (rand === 4) {
       cells[4].classList.add('t')
       cells[4 + width].classList.add('t')
       cells[4 + width - 1].classList.add('t')
       cells[4 + width + 1].classList.add('t')
-      const shape = document.querySelectorAll('.t')
       shapeType = 't'
-      shape.forEach(block => {
-        currentPosition = block.id
-        fallDown(currentPosition)
-      })
+      shapeNode = document.querySelectorAll('.t')
+      shape = Array.from(shapeNode)
+      fallDown()
     } else if (rand === 5) {
       cells[4].classList.add('s')
       cells[4 + 1].classList.add('s')
       cells[4 + width].classList.add('s')
       cells[4 + width - 1].classList.add('s')
       shapeType = 's'
-      const shape = document.querySelectorAll('.s')
-      shape.forEach(block => {
-        currentPosition = block.id
-        fallDown(currentPosition)
-      })
+      shapeNode = document.querySelectorAll('.s')
+      shape = Array.from(shapeNode)
+      fallDown()
     } else if (rand === 6) {
       cells[4].classList.add('z')
       cells[4 - 1].classList.add('z')
       cells[4 + width].classList.add('z')
       cells[4 + width + 1].classList.add('z')
       shapeType = 'z'
-      const shape = document.querySelectorAll('.z')
-      shape.forEach(block => {
-        currentPosition = block.id
-        fallDown(currentPosition)
-      })
+      shapeNode = document.querySelectorAll('.z')
+      shape = Array.from(shapeNode)
+      fallDown()
+
     }
   }
 
+  //fallDown
   function fallDown() {
     countTimer = setInterval(() => {
-      removeClass()
-
-    }, 1000)
+      if (shape.length > 0) {
+        for (let i = shape.length - 1; i >= 0; i--) {
+          currentPosition = parseFloat(shape[i].id)
+          if (shape.some(item => parseFloat(item.id) < cellCount - width && cells[parseFloat(item.id) + width].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            makeDead(currentPosition)
+          } else if (shape.every(item => parseFloat(item.id) < cellCount - width)) {
+            removeShape(currentPosition)
+            currentPosition += width
+            addShape(currentPosition)
+          } else {
+            removeShape(currentPosition)
+            makeDead(currentPosition)
+          }
+        }
+        shapeNode = document.querySelectorAll(`.${shapeType}`)
+        shape = Array.from(shapeNode)
+      } else {
+        generateShape()
+      }
+    }, 500)
   }
 
-  function removeClass() {
-    for (let i = 0; i < cellCount; i++) {
-      if (cells[i].classList.contains(shapeType)) {
-        cells[i].classList.remove(shapeType)
+
+  function handleDirection(event) {
+    const key = event.keyCode
+    const left = 37
+    const right = 39
+    const down = 40
+    if (key === left && shape.every(item => (parseFloat(item.id)) % width !== 0)) {
+      for (let i = 0; i < shape.length; i++) {
+        currentPosition = parseFloat(shape[i].id)
+        removeShape(currentPosition)
+        currentPosition -= 1
+        addShape(currentPosition)
+      }
+    } else if (key === right && shape.every(item => (parseFloat(item.id)) % width !== width - 1)) {
+      for (let i = shape.length - 1; i >= 0; i--) {
+        currentPosition = parseFloat(shape[i].id)
+        removeShape(currentPosition)
+        currentPosition += 1
+        addShape(currentPosition)
+      }
+    } else if (key === down && shape.every(item => parseFloat(item.id) < cellCount - width)) {
+      for (let i = shape.length - 1; i >= 0; i--) {
+        currentPosition = parseFloat(shape[i].id)
+        removeShape(currentPosition)
+        currentPosition += width
+        addShape(currentPosition)
       }
     }
+    shapeNode = document.querySelectorAll(`.${shapeType}`)
+    shape = Array.from(shapeNode)
   }
 
-  addClass(){
+ 
 
+  function removeShape(position) {
+    cells[position].classList.remove(shapeType)
+  }
+
+  function addShape(postion) {
+    cells[postion].classList.add(shapeType)
+  }
+
+  function makeDead(postion) {
+    cells[postion].classList.add('dead')
   }
 
 
 
   start.addEventListener('click', generateShape)
+  document.addEventListener('keydown', handleDirection)
 
 }
 
