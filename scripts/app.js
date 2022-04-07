@@ -8,20 +8,14 @@ function init() {
   const width = 10
   const height = 10
   const cellCount = width * height
-  const cells = [] //this will hold all cells we create
+  const cells = [] 
 
   function createGrid() {
-    // create all the cells using a loop
-    // once created push to cells[] and append to grid
     for (let i = 0; i < cellCount; i++) {
       const cell = document.createElement('div')
-      //cell numnber
       cell.innerText = i
-      //add index as data attribute
       cell.id = i
-      //add to grid
       grid.appendChild(cell)
-      //push to cells[]
       cells.push(cell)
     }
   }
@@ -138,14 +132,14 @@ function init() {
     const left = 37
     const right = 39
     const down = 40
-    if (key === left && shape.every(item => (parseFloat(item.id)) % width !== 0)) {
+    if (key === left && shape.every(item => (parseFloat(item.id)) % width !== 0 && !cells[parseFloat(item.id) - 1].classList.contains('dead'))) {
       for (let i = 0; i < shape.length; i++) {
         currentPosition = parseFloat(shape[i].id)
         removeShape(currentPosition)
         currentPosition -= 1
         addShape(currentPosition)
       }
-    } else if (key === right && shape.every(item => (parseFloat(item.id)) % width !== width - 1)) {
+    } else if (key === right && shape.every(item => (parseFloat(item.id)) % width !== width - 1 && !cells[parseFloat(item.id) + 1].classList.contains('dead'))) {
       for (let i = shape.length - 1; i >= 0; i--) {
         currentPosition = parseFloat(shape[i].id)
         removeShape(currentPosition)

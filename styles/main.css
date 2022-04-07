@@ -36,7 +36,6 @@ header{
 }
 
 .grid div {
-  border: 1px solid lightgrey;
   flex-grow: 1;
   height: 10%;
   width: 10%;
@@ -44,11 +43,11 @@ header{
 
 
 .o, .i, .j, .l, .t, .s, .z{
-  border: 1px solid black !important; 
-  background-color: blue !important; 
+  border: 1px solid black; 
+  background-color: blue; 
 }
 
 .dead{
-  border: 1px solid black !important; 
-  background-color: darkgray !important;
+  border: 1px solid black; 
+  background-color: darkgray;
 }
