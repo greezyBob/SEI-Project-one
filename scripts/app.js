@@ -1,10 +1,8 @@
 function init() {
 
-  //elements
   const grid = document.querySelector('.grid')
   const start = document.querySelector('#start')
 
-  //grid creation
   const width = 10
   const height = 10
   const cellCount = width * height
@@ -21,6 +19,8 @@ function init() {
   }
   createGrid()
 
+  //!GAME START
+
   //?variables
   let currentPosition = 0
   let countTimer
@@ -28,6 +28,15 @@ function init() {
   let shapeNode
   let shape
   let rotateIndex = 0
+
+  //*shapes
+  const tetrisO = [4,5,14,15]
+  const tetrisI = [4,14,24,34]
+  const tetrisL = [4,12,13,14]
+  const tetrisJ = [4,14,15,16]
+  const tetrisT = [4,13,14,15]
+  const tetrisS = [4,5,13,14]
+  const tetrisZ = [4,3,14,15]
 
 
   //rotation arrays
@@ -37,52 +46,49 @@ function init() {
   const sRotate2 = [(2 * width) - 1, +width, -1, -width]
 
   //?execute
+
+  function removeShape(position) {
+    cells[position].classList.remove(shapeType)
+  }
+
+  function addShape(postion) {
+    cells[postion].classList.add(shapeType)
+  }
+
+  function makeDead(postion) {
+    cells[postion].classList.add('dead')
+  }
+
+  function makeShapeArr() {
+    shapeNode = document.querySelectorAll(`.${shapeType}`)
+    shape = Array.from(shapeNode)
+  }
+  
   //shape generation
   function generateShape() {
     clearInterval(countTimer)
     rotateIndex = 0
-    const rand = 6//Math.floor(Math.random() * 7)
+    const rand = Math.floor(Math.random() * 7)
     if (rand === 0) {
-      cells[4].classList.add('o')
-      cells[4 + 1].classList.add('o')
-      cells[4 + width].classList.add('o')
-      cells[4 + width + 1].classList.add('o')
+      tetrisO.forEach(item => cells[item].classList.add('o'))
       shapeType = 'o'
     } else if (rand === 1) {
-      cells[4].classList.add('i')
-      cells[4 + width].classList.add('i')
-      cells[4 + (2 * width)].classList.add('i')
-      cells[4 + (3 * width)].classList.add('i')
+      tetrisI.forEach(item => cells[item].classList.add('i'))
       shapeType = 'i'
     } else if (rand === 2) {
-      cells[4].classList.add('l')
-      cells[4 + width].classList.add('l')
-      cells[4 + width - 1].classList.add('l')
-      cells[4 + width - 2].classList.add('l')
+      tetrisL.forEach(item => cells[item].classList.add('l'))
       shapeType = 'l'
     } else if (rand === 3) {
-      cells[4].classList.add('j')
-      cells[4 + width].classList.add('j')
-      cells[4 + width + 1].classList.add('j')
-      cells[4 + width + 2].classList.add('j')
+      tetrisJ.forEach(item => cells[item].classList.add('j'))
       shapeType = 'j'
     } else if (rand === 4) {
-      cells[4].classList.add('t')
-      cells[4 + width].classList.add('t')
-      cells[4 + width - 1].classList.add('t')
-      cells[4 + width + 1].classList.add('t')
+      tetrisT.forEach(item => cells[item].classList.add('t'))
       shapeType = 't'
     } else if (rand === 5) {
-      cells[4].classList.add('s')
-      cells[4 + 1].classList.add('s')
-      cells[4 + width].classList.add('s')
-      cells[4 + width - 1].classList.add('s')
+      tetrisS.forEach(item => cells[item].classList.add('s'))
       shapeType = 's'
     } else if (rand === 6) {
-      cells[4].classList.add('z')
-      cells[4 - 1].classList.add('z')
-      cells[4 + width].classList.add('z')
-      cells[4 + width + 1].classList.add('z')
+      tetrisZ.forEach(item => cells[item].classList.add('z'))
       shapeType = 'z'
     }
     makeShapeArr()
@@ -90,29 +96,29 @@ function init() {
   }
 
   //fallDown
-  // function fallDown() {
-  //   countTimer = setInterval(() => {
-  //     if (shape.length) {
-  //       for (let i = shape.length - 1; i >= 0; i--) {
-  //         currentPosition = parseFloat(shape[i].id)
-  //         if (shape.some(item => parseFloat(item.id) < cellCount - width && cells[parseFloat(item.id) + width].classList.contains('dead'))) {
-  //           removeShape(currentPosition)
-  //           makeDead(currentPosition)
-  //         } else if (shape.every(item => parseFloat(item.id) < cellCount - width)) {
-  //           removeShape(currentPosition)
-  //           currentPosition += width
-  //           addShape(currentPosition)
-  //         } else {
-  //           removeShape(currentPosition)
-  //           makeDead(currentPosition)
-  //         }
-  //       }
-  //       makeShapeArr()
-  //     } else {
-  //       generateShape()
-  //     }
-  //   }, 1000)
-  // }
+  function fallDown() {
+    countTimer = setInterval(() => {
+      if (shape.length) {
+        for (let i = shape.length - 1; i >= 0; i--) {
+          currentPosition = parseFloat(shape[i].id)
+          if (shape.some(item => parseFloat(item.id) < cellCount - width && cells[parseFloat(item.id) + width].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            makeDead(currentPosition)
+          } else if (shape.every(item => parseFloat(item.id) < cellCount - width)) {
+            removeShape(currentPosition)
+            currentPosition += width
+            addShape(currentPosition)
+          } else {
+            removeShape(currentPosition)
+            makeDead(currentPosition)
+          }
+        }
+        makeShapeArr()
+      } else {
+        generateShape()
+      }
+    }, 1000)
+  }
 
 
 
@@ -143,8 +149,8 @@ function init() {
         removeShape(currentPosition)
         currentPosition += width
         addShape(currentPosition)
-      }
-    } else if (key === up) {
+      } //! ROTATION
+    } else if (key === up) { 
       if (shapeType === 'z') {
         if (rotateIndex % 2 === 0 && (!cells[parseFloat(shape[1].id) + 1].classList.contains('dead') && !cells[parseFloat(shape[3].id) - (2 * width)].classList.contains('dead'))) {
           for (let i = 0; i < shape.length; i++) {
@@ -201,24 +207,7 @@ function init() {
     makeShapeArr()
   }
 
-  cells[25].classList.add('dead')
-
-  function removeShape(position) {
-    cells[position].classList.remove(shapeType)
-  }
-
-  function addShape(postion) {
-    cells[postion].classList.add(shapeType)
-  }
-
-  function makeDead(postion) {
-    cells[postion].classList.add('dead')
-  }
-
-  function makeShapeArr() {
-    shapeNode = document.querySelectorAll(`.${shapeType}`)
-    shape = Array.from(shapeNode)
-  }
+  // cells[25].classList.add('dead')
 
 
 
