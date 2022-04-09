@@ -41,7 +41,7 @@ function init() {
   function generateShape() {
     clearInterval(countTimer)
     rotateIndex = 0
-    const rand = 5//Math.floor(Math.random() * 7)
+    const rand = 6//Math.floor(Math.random() * 7)
     if (rand === 0) {
       cells[4].classList.add('o')
       cells[4 + 1].classList.add('o')
@@ -114,8 +114,8 @@ function init() {
   //   }, 1000)
   // }
 
-  cells[70].classList.add('dead')
- 
+
+
 
   function handleDirection(event) {
     const key = event.keyCode
@@ -146,20 +146,29 @@ function init() {
       }
     } else if (key === up) {
       if (shapeType === 'z') {
-        if (rotateIndex % 2 === 0) {
+        if (rotateIndex % 2 === 0 && (!cells[parseFloat(shape[1].id) + 1].classList.contains('dead') && !cells[parseFloat(shape[3].id) - (2 * width)].classList.contains('dead'))) {
           for (let i = 0; i < shape.length; i++) {
             currentPosition = parseFloat(shape[i].id)
             removeShape(currentPosition)
             currentPosition += zRotate1[i]
             addShape(currentPosition)
           } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
-        } else if (rotateIndex % 2 !== 0) {
-          for (let i = 0; i < shape.length; i++) {
-            currentPosition = parseFloat(shape[i].id)
-            removeShape(currentPosition)
-            currentPosition += zRotate2[i]
-            addShape(currentPosition)
-          } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
+        } else if (rotateIndex % 2 !== 0 && (!cells[parseFloat(shape[3].id) + 1].classList.contains('dead') && !cells[parseFloat(shape[2].id) - 1].classList.contains('dead'))) {
+          if (shape.some(item => (parseFloat(item.id)) % width === 0) && (!cells[parseFloat(shape[3].id) + 1].classList.contains('dead') && !cells[parseFloat(shape[3].id) + 2].classList.contains('dead'))) {
+            for (let i = 0; i < shape.length; i++) {
+              currentPosition = parseFloat(shape[i].id)
+              removeShape(currentPosition)
+              currentPosition += zRotate2[i] + 1
+              addShape(currentPosition)
+            } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
+          } else if (shape.every(item => (parseFloat(item.id)) % width !== 0)) {
+            for (let i = 0; i < shape.length; i++) {
+              currentPosition = parseFloat(shape[i].id)
+              removeShape(currentPosition)
+              currentPosition += zRotate2[i]
+              addShape(currentPosition)
+            } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
+          }
         }
       }
       if (shapeType === 's') {
@@ -192,7 +201,7 @@ function init() {
     makeShapeArr()
   }
 
-
+  cells[25].classList.add('dead')
 
   function removeShape(position) {
     cells[position].classList.remove(shapeType)
