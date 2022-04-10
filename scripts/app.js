@@ -19,108 +19,124 @@ function init() {
   }
   createGrid()
 
+  for (let i = 0; i < cellCount.length; i++) {
+
+  }
+
   //!GAME START
 
   //?variables
-  let currentPosition = 0
+  let currentPosition = 4
+  let current
+  let future
   let countTimer
-  let shapeType
-  let shapeNode
-  let shape
   let rotateIndex = 0
+  let rand
+  let rowDeleted
+  let rowDeletedIndex
 
   //*shapes
-  const tetrisO = [4,5,14,15]
-  const tetrisI = [4,14,24,34]
-  const tetrisL = [4,12,13,14]
-  const tetrisJ = [4,14,15,16]
-  const tetrisT = [4,13,14,15]
-  const tetrisS = [4,5,13,14]
-  const tetrisZ = [4,3,14,15]
+  const shapeType = ['O', 'I', 'L', 'J', 'T', 'S', 'Z']
 
+  const tetrisO = [
+    [0, 1, width, width + 1]
+  ]
+  const tetrisI = [
+    [width - 1, width, width + 1, width + 2],
+    [1, 1 + width, 1 + (2 * width), 1 + (3 * width)],
+    [width - 1, width, width + 1, width + 2],
+    [1, 1 + width, 1 + (2 * width), 1 + (3 * width)]
+  ]
+  const tetrisL = [
+    [1, width - 1, width, width + 1],
+    [0, width, (2 * width), (2 * width) + 1],
+    [- 1 + width, (2 * width) - 1, width, 1 + width],
+    [0, width, (2 * width), -1]
+  ]
+  const tetrisJ = [
+    [-1, width - 1, width, width + 1],
+    [0, width, (2 * width), 1],
+    [(2 * width) + 1, width - 1, width, width + 1],
+    [0, width, (2 * width), (2 * width) - 1]
+  ]
+  const tetrisT = [
+    [0, width - 1, width, width + 1],
+    [0, width, (2 * width), width + 1],
+    [(2 * width), width - 1, width, width + 1],
+    [0, width, (2 * width), width - 1]
+  ]
+  const tetrisS = [
+    [0, 1, width - 1, width],
+    [0, width, width + 1, (2 * width) + 1],
+    [0, 1, width - 1, width],
+    [0, width, width + 1, (2 * width) + 1]
+  ]
+  const tetrisZ = [
+    [0, -1, width, width + 1],
+    [1, width, width + 1, (2 * width)],
+    [0, -1, width, width + 1],
+    [1, width, width + 1, (2 * width)]
+  ]
 
-  //rotation arrays
-  const zRotate1 = [-width + 2, 1, -width, -1]
-  const zRotate2 = [width * 2, -1, -1, 0]
-  const sRotate1 = [-width, -1, 2 - width, 1]
-  const sRotate2 = [(2 * width) - 1, +width, -1, -width]
+  const tetriminos = [tetrisO, tetrisI, tetrisL, tetrisJ, tetrisT, tetrisS, tetrisZ]
 
   //?execute
 
   function removeShape(position) {
-    cells[position].classList.remove(shapeType)
+    current.forEach(item => cells[position + item].classList.remove(shapeType[rand]))
   }
 
-  function addShape(postion) {
-    cells[postion].classList.add(shapeType)
+  function addShape(position) {
+    current.forEach(item => cells[position + item].classList.add(shapeType[rand]))
   }
 
-  function makeDead(postion) {
-    cells[postion].classList.add('dead')
+  function makeDead(position) {
+    current.forEach(item => cells[position + item].classList.add('dead'))
   }
 
-  function makeShapeArr() {
-    shapeNode = document.querySelectorAll(`.${shapeType}`)
-    shape = Array.from(shapeNode)
-  }
-  
-  //shape generation
   function generateShape() {
-    clearInterval(countTimer)
     rotateIndex = 0
-    const rand = Math.floor(Math.random() * 7)
-    if (rand === 0) {
-      tetrisO.forEach(item => cells[item].classList.add('o'))
-      shapeType = 'o'
-    } else if (rand === 1) {
-      tetrisI.forEach(item => cells[item].classList.add('i'))
-      shapeType = 'i'
-    } else if (rand === 2) {
-      tetrisL.forEach(item => cells[item].classList.add('l'))
-      shapeType = 'l'
-    } else if (rand === 3) {
-      tetrisJ.forEach(item => cells[item].classList.add('j'))
-      shapeType = 'j'
-    } else if (rand === 4) {
-      tetrisT.forEach(item => cells[item].classList.add('t'))
-      shapeType = 't'
-    } else if (rand === 5) {
-      tetrisS.forEach(item => cells[item].classList.add('s'))
-      shapeType = 's'
-    } else if (rand === 6) {
-      tetrisZ.forEach(item => cells[item].classList.add('z'))
-      shapeType = 'z'
-    }
-    makeShapeArr()
-    fallDown()
+    currentPosition = 4
+    rand = 0//Math.floor(Math.random() * 7)
+    current = tetriminos[rand][rotateIndex]
+    current.forEach(item => cells[currentPosition + item].classList.add(shapeType[rand]))
+    fallDown(currentPosition)
   }
 
-  //fallDown
+
   function fallDown() {
     countTimer = setInterval(() => {
-      if (shape.length) {
-        for (let i = shape.length - 1; i >= 0; i--) {
-          currentPosition = parseFloat(shape[i].id)
-          if (shape.some(item => parseFloat(item.id) < cellCount - width && cells[parseFloat(item.id) + width].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            makeDead(currentPosition)
-          } else if (shape.every(item => parseFloat(item.id) < cellCount - width)) {
-            removeShape(currentPosition)
-            currentPosition += width
-            addShape(currentPosition)
-          } else {
-            removeShape(currentPosition)
-            makeDead(currentPosition)
-          }
-        }
-        makeShapeArr()
+      if (current.every(item => currentPosition + item < cellCount - width && !cells[currentPosition + item + width].classList.contains('dead'))) {
+        removeShape(currentPosition)
+        currentPosition += width
+        addShape(currentPosition)
       } else {
-        generateShape()
+        removeShape(currentPosition)
+        makeDead(currentPosition)
+        clearInterval(countTimer)
+        checkComplete()
       }
-    }, 1000)
+    }, 500)
   }
 
 
+  function checkComplete() {
+    for (let i = 0; i < cells.length; i += width) {
+      const row = cells.slice(i, i + width)
+      if (row.every(item => item.classList.contains('dead'))) {
+        row.forEach(item => item.classList.remove('dead'))
+        //increase points
+        rowDeleted = true
+        rotateIndex = i
+      } else {
+        rowDeleted = false
+      }
+    }
+    if (rowDeleted) {
+      
+    }
+    generateShape()
+  }
 
 
   function handleDirection(event) {
@@ -129,86 +145,187 @@ function init() {
     const up = 38
     const right = 39
     const down = 40
-    if (key === left && shape.every(item => (parseFloat(item.id)) % width !== 0 && !cells[parseFloat(item.id) - 1].classList.contains('dead'))) {
-      for (let i = 0; i < shape.length; i++) {
-        currentPosition = parseFloat(shape[i].id)
-        removeShape(currentPosition)
-        currentPosition -= 1
-        addShape(currentPosition)
-      }
-    } else if (key === right && shape.every(item => (parseFloat(item.id)) % width !== width - 1 && !cells[parseFloat(item.id) + 1].classList.contains('dead'))) {
-      for (let i = shape.length - 1; i >= 0; i--) {
-        currentPosition = parseFloat(shape[i].id)
-        removeShape(currentPosition)
-        currentPosition += 1
-        addShape(currentPosition)
-      }
-    } else if (key === down && shape.every(item => parseFloat(item.id) < cellCount - width && !cells[parseFloat(item.id) + width].classList.contains('dead'))) {
-      for (let i = shape.length - 1; i >= 0; i--) {
-        currentPosition = parseFloat(shape[i].id)
-        removeShape(currentPosition)
-        currentPosition += width
-        addShape(currentPosition)
-      } //! ROTATION
-    } else if (key === up) { 
-      if (shapeType === 'z') {
-        if (rotateIndex % 2 === 0 && (!cells[parseFloat(shape[1].id) + 1].classList.contains('dead') && !cells[parseFloat(shape[3].id) - (2 * width)].classList.contains('dead'))) {
-          for (let i = 0; i < shape.length; i++) {
-            currentPosition = parseFloat(shape[i].id)
+    if (key === left && current.every(item => (currentPosition + item) % width !== 0 && !cells[currentPosition + item - 1].classList.contains('dead'))) {
+      removeShape(currentPosition)
+      currentPosition -= 1
+      addShape(currentPosition)
+    } else if (key === right && current.every(item => (currentPosition + item) % width !== 9 && !cells[currentPosition + item + 1].classList.contains('dead'))) {
+      removeShape(currentPosition)
+      currentPosition += 1
+      addShape(currentPosition)
+    } else if (key === down && current.every(item => currentPosition + item < cellCount - width && !cells[currentPosition + item + width].classList.contains('dead'))) {
+      removeShape(currentPosition)
+      currentPosition += width
+      addShape(currentPosition)
+    } else if (key === up) {
+      let isRow8 = current.some(item => (currentPosition + item) >= cellCount - (2 * width))
+      let isRow9 = current.some(item => (currentPosition + item) >= cellCount - width)
+      let isColumn0 = current.some(item => (currentPosition + item) % width === 0)
+      let isColumn1 = current.some(item => (currentPosition + item) % width === 1)
+      let isColumn8 = current.some(item => (currentPosition + item) % width === 8)
+      let isColumn9 = current.some(item => (currentPosition + item) % width === 9)
+      rotateIndex < 3 ? future = tetriminos[rand][rotateIndex + 1] : future = tetriminos[rand][0]
+      if (rand === 1) {
+        if (rotateIndex % 2 === 0 && !isRow8 && !isRow9 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+          removeShape(currentPosition)
+          rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+          current = tetriminos[rand][rotateIndex]
+          addShape(currentPosition)
+        } else if (rotateIndex % 2 !== 0) {
+          if (isColumn0 && future.every(item => !cells[currentPosition + 2 + item].classList.contains('dead'))) {
             removeShape(currentPosition)
-            currentPosition += zRotate1[i]
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            currentPosition += 2
             addShape(currentPosition)
-          } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
-        } else if (rotateIndex % 2 !== 0 && (!cells[parseFloat(shape[3].id) + 1].classList.contains('dead') && !cells[parseFloat(shape[2].id) - 1].classList.contains('dead'))) {
-          if (shape.some(item => (parseFloat(item.id)) % width === 0) && (!cells[parseFloat(shape[3].id) + 1].classList.contains('dead') && !cells[parseFloat(shape[3].id) + 2].classList.contains('dead'))) {
-            for (let i = 0; i < shape.length; i++) {
-              currentPosition = parseFloat(shape[i].id)
-              removeShape(currentPosition)
-              currentPosition += zRotate2[i] + 1
-              addShape(currentPosition)
-            } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
-          } else if (shape.every(item => (parseFloat(item.id)) % width !== 0)) {
-            for (let i = 0; i < shape.length; i++) {
-              currentPosition = parseFloat(shape[i].id)
-              removeShape(currentPosition)
-              currentPosition += zRotate2[i]
-              addShape(currentPosition)
-            } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
+          } else if (isColumn1 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            currentPosition += 1
+            addShape(currentPosition)
+          } else if (isColumn9 && future.every(item => !cells[currentPosition - 2 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            currentPosition -= 2
+            addShape(currentPosition)
+          } else if (isColumn8 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            currentPosition -= 1
+            addShape(currentPosition)
+          } else {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
           }
         }
-      }
-      if (shapeType === 's') {
-        if (rotateIndex % 2 === 0 && (!cells[parseFloat(shape[0].id) - width].classList.contains('dead') && !cells[parseFloat(shape[3].id) + 1].classList.contains('dead'))) {
-          for (let i = 0; i < shape.length; i++) {
-            currentPosition = parseFloat(shape[i].id)
+      } else if (rand === 2 || rand === 3) {
+        if (rotateIndex === 0) {
+          if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
             removeShape(currentPosition)
-            currentPosition += sRotate1[i]
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            currentPosition -= width
+            current = tetriminos[rand][rotateIndex]
             addShape(currentPosition)
-          } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
-        } else if (rotateIndex % 2 !== 0 && (!cells[parseFloat(shape[3].id) - 1].classList.contains('dead') && !cells[parseFloat(shape[3].id) - 2].classList.contains('dead'))) {
-          if (shape.some(item => (parseFloat(item.id)) % width === 0) && (!cells[parseFloat(shape[1].id) + width].classList.contains('dead') && !cells[parseFloat(shape[2].id) + 1].classList.contains('dead'))) {
-            for (let i = 0; i < shape.length; i++) {
-              currentPosition = parseFloat(shape[shape.length - i - 1].id)
-              removeShape(currentPosition)
-              currentPosition += sRotate2[shape.length - i - 1] + 1
-              addShape(currentPosition)
-            } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
-          } else if (shape.every(item => (parseFloat(item.id)) % width !== 0)) {
-            for (let i = 0; i < shape.length; i++) {
-              currentPosition = parseFloat(shape[i].id)
-              removeShape(currentPosition)
-              currentPosition += sRotate2[i]
-              addShape(currentPosition)
-            } rotateIndex < 3 ? rotateIndex += 1 : rotateIndex = 0
+          } else if (future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          }
+        } else if (rotateIndex === 1) {
+          if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            currentPosition += 1
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          }
+        } else if (rotateIndex === 2 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+          removeShape(currentPosition)
+          rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+          current = tetriminos[rand][rotateIndex]
+          addShape(currentPosition)
+        } else if (rotateIndex === 3) {
+          if (isColumn9 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            currentPosition -= 1
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          }
+        }
+      } else if (rand === 4) {
+        if (rotateIndex === 0) {
+          if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            currentPosition -= width
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          }
+        } else if (rotateIndex === 1) {
+          if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            currentPosition += 1
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          }
+        } else if (rotateIndex === 2 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+          removeShape(currentPosition)
+          rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+          current = tetriminos[rand][rotateIndex]
+          addShape(currentPosition)
+        } else if (rotateIndex === 3) {
+          if (isColumn9 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            currentPosition -= 1
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          }
+        }
+      } else if (rand === 5 || rand === 6) {
+        if (rotateIndex % 2 === 0) {
+          if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            currentPosition -= width
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          }
+        } else if (rotateIndex % 2 !== 0) {
+          if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            currentPosition += 1
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
+          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+            removeShape(currentPosition)
+            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+            current = tetriminos[rand][rotateIndex]
+            addShape(currentPosition)
           }
         }
       }
     }
-    makeShapeArr()
   }
-
-  // cells[25].classList.add('dead')
-
 
 
   start.addEventListener('click', generateShape)
@@ -217,3 +334,4 @@ function init() {
 }
 
 window.addEventListener('DOMContentLoaded', init)
+
