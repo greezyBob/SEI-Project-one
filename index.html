@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles/main.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="scripts/app.js" charset="utf-8"></script>
 
   <title>Tetris</title>
 </head>
+
 <body>
+  <audio id='music' src=""></audio>
+  <audio src="" id="complete-row-effect"></audio>
+  
   <header>
-    
+<img src="./assets/TetrisTitle.png" alt="Tetris">
   </header>
 
-
+<div class="modal unshow">
+  <div class="modal-content">
+    <p class="modal-text"> </p>
+    <span class="close">&times;</span>
+  </div>
+</div>
   <section class="game">
     <div class="game-buttons">
       <button id="start">Start</button>
@@ -28,11 +41,13 @@
     <div class="mini-wrapper">
       <div class="mini-grid"></div>
       <div class="points">
-        <span>Points</span>
+        <p>Points</p>
+        <p id="points">0</p>
       </div>
     </div>
   </section>
-  
-  
+
+
 </body>
+
 </html>

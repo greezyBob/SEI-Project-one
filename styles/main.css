@@ -6,27 +6,119 @@ body {
   height: 100vh;
   margin: 0;
   padding-top: 15px;
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  background-image: url('../assets/neon-backround.jpeg');
+  background-position: center;
+  background-size: cover;
 }
 
 header{
+  padding-top: 10px;
   margin-bottom: 10px;
-  margin-left: 10%;
   height: 90px;
+  text-align: center;
   
 }
+
+
+.modal{
+  position: fixed;
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+.modal-content {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #fefefe;
+  margin: 20% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  width: 35%;
+  color: #aaa;
+}
+
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 
 .game{
   display: flex;
   justify-content: space-around;
   align-items: center;
-
+  padding-left: 75px;
+  padding-right: 75px;
 }
+
+.game-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 300px;
+}
+
+button {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  font-size: 30px;
+  padding: 20px;
+  font-family: "Press Start 2P", cursive;
+  text-decoration: none;
+  color: white;
+  border-radius: 2px;
+}
+button:hover {
+  cursor: pointer;
+}
+
+#start{
+  background: #92CD41;
+  box-shadow: inset -4px -4px 0px 0px #4aa52e;
+}
+
+#start:hover{
+  background: #76c442;
+box-shadow: inset -6px -6px 0px 0px #4aa52e;
+}
+
+#reset{
+  background: #cd414d;
+  box-shadow: inset -4px -4px 0px 0px #862a32;
+}
+
+#reset:hover{
+  background: #CE372B;
+  box-shadow: inset -6px -6px 0px 0px #8c2022;
+}
+
 
 .grid-wrapper {
   height:600px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: black;
+  border: 1px solid blue;
 }
 
 .grid {
@@ -51,7 +143,8 @@ header{
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  align-items: center
+  align-items: center;
+  
 }
 
 .mini-grid{
@@ -63,6 +156,7 @@ header{
   justify-content: center;
   height: 80px;
   width: 200px;
+  background-color: black;
 }
 
 .mini-grid div {
@@ -72,12 +166,83 @@ header{
 }
 
 
-.O, .I, .J, .L, .T, .S, .Z{
-  border: 1px solid black; 
-  background-color: blue; 
+.O {
+  background: #ffff00;
+  border: 5px solid #ffff00;
+  border-top-color: #ffffb3;
+  border-left-color: #cccc00;
+  border-right-color: #cccc00;
+  border-bottom-color: #4d4d00;
+}
+
+.I {
+  background: #00ffff;
+  border: 5px solid #00ffff;
+  border-top-color: #b3ffff;
+  border-left-color: #00cccc;
+  border-right-color: #00cccc;
+  border-bottom-color: #004d4d;
+}
+
+.J {
+  background: #0000ff;
+  border: 5px solid #0000ff;
+  border-top-color: #b3b3ff;
+  border-left-color: #0000cc;
+  border-right-color: #0000cc;
+  border-bottom-color: #00004d;
+}
+
+.L {
+  background: #ffaa00;
+  border: 5px solid #ffaa00;
+  border-top-color: #ffe6b3;
+  border-left-color: #cc8800;
+  border-right-color: #cc8800;
+  border-bottom-color: #4d3300;
+}
+
+.T {
+  background: #aa00ff;
+  border: 5px solid #aa00ff;
+  border-top-color: #e6b3ff;
+  border-left-color: #8800cc;
+  border-right-color: #8800cc;
+  border-bottom-color: #33004d;
+}
+
+.S {
+  background: #00ff00;
+  border: 5px solid #00ff00;
+  border-top-color: #b3ffb3;
+  border-left-color: #00cc00;
+  border-right-color: #00cc00;
+  border-bottom-color: #004d00;
+}
+
+.Z {
+  background: #ff0000;
+  border: 5px solid #ff0000;
+  border-top-color: #ffb3b3;
+  border-left-color: #cc0000;
+  border-right-color: #cc0000;
+  border-bottom-color: #4d0000;
 }
 
 .dead{
-  border: 1px solid black; 
-  background-color: darkgray;
+  background: #adadad;
+  border: 5px solid gray;
+  border-top-color: lightgrey;
+  border-left-color: #8d8c8c;
+  border-right-color: #8d8c8c;
+  border-bottom-color: rgb(95 94 94)
+}
+
+
+.points{
+  text-align: center;
+}
+
+.unshow {
+  display: none;
 }
