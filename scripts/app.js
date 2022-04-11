@@ -47,6 +47,12 @@ function init() {
   const modalP = document.querySelector('.modal-text')
   const closeModal = document.querySelector('.close')
 
+  //audio
+  const music = document.querySelector('#music')
+  const soundEffect = document.querySelector('#sound-effect')
+  console.log(soundEffect)
+
+
 
   //?variables
   let currentPosition = 4
@@ -127,12 +133,13 @@ function init() {
   function nextShape() {
     nextIndex = Math.floor(Math.random() * 7)
     next = tetriminos[nextIndex][0]
-    makeNext()
+    next.forEach(item => miniCells[nextPosition + item].classList.add(shapeType[nextIndex]))
   }
 
-
-  function makeNext() {
-    next.forEach(item => miniCells[nextPosition + item].classList.add(shapeType[nextIndex]))
+  function startGame() {
+    music.play()
+    music.loop = true
+    generateShape()
   }
 
   function generateShape() {
@@ -179,6 +186,8 @@ function init() {
     }
     if (rowDeleted) {
       rowDeleted = false
+      soundEffect.src = './assets/audio/clear-row.wav'
+      soundEffect.play()
       setTimeout(() => {
         if (cells.some(item => item.classList.contains('dead'))) {
           while (gridRow[rowDeletedIndex / width].every(item => !item.classList.contains('dead'))) {
@@ -205,13 +214,13 @@ function init() {
     clearInterval(countTimer)
     modal.classList.toggle('unshow')
     modalP.innerText = 'Game Over'
+    soundEffect.src = './assets/audio/game-over.wav'
+    soundEffect.play()
   }
 
   function closeGameOver() {
     modal.classList.toggle('unshow')
   }
-
-cells[24].classList.add('dead')
 
   function resetGame() {
     clearInterval(countTimer)
@@ -415,7 +424,7 @@ cells[24].classList.add('dead')
   }
 
 
-  start.addEventListener('click', generateShape)
+  start.addEventListener('click', startGame)
   reset.addEventListener('click', resetGame)
   document.addEventListener('keydown', handleDirection)
   closeModal.addEventListener('click', closeGameOver)

@@ -111,6 +111,17 @@ box-shadow: inset -6px -6px 0px 0px #4aa52e;
   box-shadow: inset -6px -6px 0px 0px #8c2022;
 }
 
+#theme-music{
+  background: hsl(49, 100%, 57%);
+  box-shadow: inset -4px -4px 0px 0px hsl(49, 83%, 41%);
+}
+
+#theme-music:hover{
+  background: rgb(239, 195, 1);
+  box-shadow: inset -6px -6px 0px 0px hsl(49, 83%, 41%);
+}
+
+
 
 .grid-wrapper {
   height:600px;
