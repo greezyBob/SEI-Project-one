@@ -2,16 +2,22 @@ function init() {
 
   const grid = document.querySelector('.grid')
   const start = document.querySelector('#start')
+  const miniGrid = document.querySelector('.mini-grid')
 
   const width = 10
-  const height = 10
+  const height = 20
   const cellCount = width * height
   const cells = []
+
+  const miniWidth = 10
+  const miniHeight = 4
+  const miniCount = miniWidth * miniHeight
+  const miniCells = []
+
 
   function createGrid() {
     for (let i = 0; i < cellCount; i++) {
       const cell = document.createElement('div')
-      cell.innerText = i
       cell.id = i
       grid.appendChild(cell)
       cells.push(cell)
@@ -19,9 +25,17 @@ function init() {
   }
   createGrid()
 
-  for (let i = 0; i < cellCount.length; i++) {
-
+  function createMini() {
+    for (let i = 0; i < miniCount; i++) {
+      const cell = document.createElement('div')
+      cell.id = i
+      miniGrid.appendChild(cell)
+      miniCells.push(cell)
+    }
   }
+  createMini()
+
+
 
   //!GAME START
 
@@ -31,9 +45,11 @@ function init() {
   let future
   let countTimer
   let rotateIndex = 0
-  let rand
+  let rand = Math.floor(Math.random() * 7)
   let rowDeleted
   let rowDeletedIndex
+  const nextPosition = 14
+  let next
 
   //*shapes
   const shapeType = ['O', 'I', 'L', 'J', 'T', 'S', 'Z']
@@ -94,19 +110,43 @@ function init() {
     current.forEach(item => cells[position + item].classList.add('dead'))
   }
 
+
+
+  function nextShape() {
+
+    next = tetriminos[rand][0]
+    removeNext()
+    rand = Math.floor(Math.random() * 7)
+    next = tetriminos[rand][0]
+    makeNext()
+
+
+  }
+
+
+  function removeNext() {
+    next.forEach(item => miniCells[nextPosition + item].classList.remove(shapeType[rand]))
+  }
+
+  function makeNext() {
+    next.forEach(item => miniCells[nextPosition + item].classList.add(shapeType[rand]))
+  }
+
   function generateShape() {
     rotateIndex = 0
     currentPosition = 4
-    rand = 0//Math.floor(Math.random() * 7)
     current = tetriminos[rand][rotateIndex]
     current.forEach(item => cells[currentPosition + item].classList.add(shapeType[rand]))
     fallDown(currentPosition)
+    // nextShape()
+    console.log(current)
   }
 
 
   function fallDown() {
     countTimer = setInterval(() => {
       if (current.every(item => currentPosition + item < cellCount - width && !cells[currentPosition + item + width].classList.contains('dead'))) {
+        console.log('clear')
         removeShape(currentPosition)
         currentPosition += width
         addShape(currentPosition)
@@ -127,13 +167,22 @@ function init() {
         row.forEach(item => item.classList.remove('dead'))
         //increase points
         rowDeleted = true
-        rotateIndex = i
+        rowDeletedIndex = i
       } else {
         rowDeleted = false
       }
     }
     if (rowDeleted) {
-      
+      setTimeout(() => {
+        while (!cells[rowDeletedIndex].classList.contains('dead')) {
+          for (let i = rowDeletedIndex - 1; i > -1; i--) {
+            if (cells[i].classList.contains('dead')) {
+              cells[i].classList.remove('dead')
+              cells[i + width].classList.add('dead')
+            }
+          }
+        }
+      }, 500)
     }
     generateShape()
   }
@@ -330,6 +379,11 @@ function init() {
 
   start.addEventListener('click', generateShape)
   document.addEventListener('keydown', handleDirection)
+  window.addEventListener('keydown', function (e) {
+    if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].indexOf(e.code) > -1) {
+      e.preventDefault()
+    }
+  }, false)
 
 }
 
