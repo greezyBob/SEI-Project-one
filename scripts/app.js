@@ -113,14 +113,11 @@ function init() {
 
 
   function nextShape() {
-
     next = tetriminos[rand][0]
     removeNext()
     rand = Math.floor(Math.random() * 7)
     next = tetriminos[rand][0]
     makeNext()
-
-
   }
 
 
@@ -138,7 +135,7 @@ function init() {
     current = tetriminos[rand][rotateIndex]
     current.forEach(item => cells[currentPosition + item].classList.add(shapeType[rand]))
     fallDown(currentPosition)
-    // nextShape()
+    nextShape()
     console.log(current)
   }
 
