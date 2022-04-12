@@ -249,6 +249,8 @@ function init() {
     level = 1
     level.innerHTML = level
     startBtn.disabled = false
+    music.currentTime = 0
+    music.pause()
   }
 
   function openOptionsMenu() {
