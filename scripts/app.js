@@ -40,33 +40,45 @@ function init() {
 
 
   //?elements
-  const start = document.querySelector('#start')
-  const reset = document.querySelector('#reset')
+  const startBtn = document.querySelector('#start')
+  const resetBtn = document.querySelector('#reset')
+  const optionsBtn = document.querySelector('#options')
+  const optionsModal = document.querySelector('.options-modal')
   const pointsSpan = document.querySelector('#points')
+  const levelSpan = document.querySelector('#level')
   const modal = document.querySelector('.modal')
-  const modalP = document.querySelector('.modal-text')
-  const closeModal = document.querySelector('.close')
+  const modalContent = document.querySelector('.modal-content')
+  const optionsContent = document.querySelector('.options-content')
+  const body = document.querySelector('body')
+  const musicOn = document.querySelector('#music-on')
+  const musicOff = document.querySelector('#music-off')
+  const soundOn = document.querySelector('#sound-on')
+  const soundOff = document.querySelector('#sound-off')
 
   //audio
   const music = document.querySelector('#music')
   const soundEffect = document.querySelector('#sound-effect')
-  console.log(soundEffect)
+  music.volume = 0.25
+  soundEffect.volume = 0.35
 
 
 
   //?variables
   let currentPosition = 4
   let points = 0
+  let level = 1
   let current
   let future
   let countTimer
   let rotateIndex = 0
-  let rand = 1//Math.floor(Math.random() * 7)
+  let rand = Math.floor(Math.random() * 7)
   let rowDeleted
   let rowDeletedIndex
   const nextPosition = 14
   let next
   let nextIndex
+  let time = 500
+  let scoreLimit = 1000
 
 
   //*shapes
@@ -140,9 +152,16 @@ function init() {
     music.play()
     music.loop = true
     generateShape()
+    startBtn.disabled = true
   }
 
   function generateShape() {
+    if (points > 0 && points >= scoreLimit && time > 100) {
+      time -= 100
+      scoreLimit += 1000
+      level += 1
+      levelSpan.innerHTML = level
+    }
     rotateIndex = 0
     currentPosition = 4
     current = tetriminos[rand][rotateIndex]
@@ -167,7 +186,7 @@ function init() {
         clearInterval(countTimer)
         checkComplete()
       }
-    }, 500)
+    }, time)
   }
 
 
@@ -213,13 +232,10 @@ function init() {
   function gameOver() {
     clearInterval(countTimer)
     modal.classList.toggle('unshow')
-    modalP.innerText = 'Game Over'
     soundEffect.src = './assets/audio/game-over.wav'
+    music.currentTime = 0
+    music.pause()
     soundEffect.play()
-  }
-
-  function closeGameOver() {
-    modal.classList.toggle('unshow')
   }
 
   function resetGame() {
@@ -229,6 +245,14 @@ function init() {
     miniCells.forEach(item => item.classList.remove(shapeType[nextIndex]))
     points = 0
     pointsSpan.innerHTML = 0
+    time = 500
+    level = 1
+    level.innerHTML = level
+    startBtn.disabled = false
+  }
+
+  function openOptionsMenu() {
+    optionsModal.classList.toggle('unshow')
   }
 
 
@@ -423,11 +447,67 @@ function init() {
     }
   }
 
+  function bodyclick() {
+    if (!optionsModal.classList.contains('unshow')) {
+      optionsModal.classList.toggle('unshow')
+    }
+    if (!modal.classList.contains('unshow')) {
+      modal.classList.toggle('unshow')
+    }
+  }
 
-  start.addEventListener('click', startGame)
-  reset.addEventListener('click', resetGame)
+  function musicMute(event) {
+    if (!event.target.classList.contains('black-text')) {
+      event.target.classList.toggle('black-text')
+      musicOn.classList.toggle('black-text')
+      music.muted = true
+    }
+  }
+
+  function musicPlay(event) {
+    if (!event.target.classList.contains('black-text')) {
+      event.target.classList.toggle('black-text')
+      musicOff.classList.toggle('black-text')
+      music.muted = false
+    }
+  }
+
+  function soundMute(event) {
+    if (!event.target.classList.contains('black-text')) {
+      event.target.classList.toggle('black-text')
+      soundOn.classList.toggle('black-text')
+      soundEffect.muted = true
+    }
+  }
+
+  function soundPlay(event) {
+    if (!event.target.classList.contains('black-text')) {
+      event.target.classList.toggle('black-text')
+      soundOff.classList.toggle('black-text')
+      soundEffect.muted = false
+    }
+  }
+
+  function stopClick(event) {
+    event.stopPropagation()
+  }
+
+
+
+
+  startBtn.addEventListener('click', startGame)
+  resetBtn.addEventListener('click', resetGame)
   document.addEventListener('keydown', handleDirection)
-  closeModal.addEventListener('click', closeGameOver)
+  optionsBtn.addEventListener('click', openOptionsMenu)
+  body.addEventListener('click', bodyclick)
+  optionsContent.addEventListener('click', stopClick)
+  modalContent.addEventListener('click', stopClick)
+  optionsBtn.addEventListener('click', stopClick)
+  musicOn.addEventListener('click', musicPlay)
+  musicOff.addEventListener('click', musicMute)
+  soundOn.addEventListener('click', soundPlay)
+  soundOff.addEventListener('click', soundMute)
+
 
 
 
