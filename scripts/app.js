@@ -260,189 +260,191 @@ function init() {
 
 
   function handleDirection(event) {
-    const key = event.keyCode
-    const left = 37
-    const up = 38
-    const right = 39
-    const down = 40
-    if (key === left && current.every(item => (currentPosition + item) % width !== 0 && !cells[currentPosition + item - 1].classList.contains('dead'))) {
-      removeShape(currentPosition)
-      currentPosition -= 1
-      addShape(currentPosition)
-    } else if (key === right && current.every(item => (currentPosition + item) % width !== 9 && !cells[currentPosition + item + 1].classList.contains('dead'))) {
-      removeShape(currentPosition)
-      currentPosition += 1
-      addShape(currentPosition)
-    } else if (key === down && current.every(item => currentPosition + item < cellCount - width && !cells[currentPosition + item + width].classList.contains('dead'))) {
-      removeShape(currentPosition)
-      currentPosition += width
-      addShape(currentPosition)
-      points += 1
-      pointsSpan.innerHTML = points
-    } else if (key === up) {
-      let isRow8 = current.some(item => (currentPosition + item) >= cellCount - (2 * width))
-      let isRow9 = current.some(item => (currentPosition + item) >= cellCount - width)
-      let isColumn0 = current.some(item => (currentPosition + item) % width === 0)
-      let isColumn1 = current.some(item => (currentPosition + item) % width === 1)
-      let isColumn8 = current.some(item => (currentPosition + item) % width === 8)
-      let isColumn9 = current.some(item => (currentPosition + item) % width === 9)
-      rotateIndex < 3 ? future = tetriminos[rand][rotateIndex + 1] : future = tetriminos[rand][0]
-      if (rand === 1) {
-        if (rotateIndex % 2 === 0 && !isRow8 && !isRow9 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-          removeShape(currentPosition)
-          rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-          current = tetriminos[rand][rotateIndex]
-          addShape(currentPosition)
-        } else if (rotateIndex % 2 !== 0) {
-          if (isColumn0 && future.every(item => !cells[currentPosition + 2 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            currentPosition += 2
-            addShape(currentPosition)
-          } else if (isColumn1 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            currentPosition += 1
-            addShape(currentPosition)
-          } else if (isColumn9 && future.every(item => !cells[currentPosition - 2 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            currentPosition -= 2
-            addShape(currentPosition)
-          } else if (isColumn8 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            currentPosition -= 1
-            addShape(currentPosition)
-          } else {
+    if (startBtn.disabled) {
+      const key = event.keyCode
+      const left = 37
+      const up = 38
+      const right = 39
+      const down = 40
+      if (key === left && current.every(item => (currentPosition + item) % width !== 0 && !cells[currentPosition + item - 1].classList.contains('dead'))) {
+        removeShape(currentPosition)
+        currentPosition -= 1
+        addShape(currentPosition)
+      } else if (key === right && current.every(item => (currentPosition + item) % width !== 9 && !cells[currentPosition + item + 1].classList.contains('dead'))) {
+        removeShape(currentPosition)
+        currentPosition += 1
+        addShape(currentPosition)
+      } else if (key === down && current.every(item => currentPosition + item < cellCount - width && !cells[currentPosition + item + width].classList.contains('dead'))) {
+        removeShape(currentPosition)
+        currentPosition += width
+        addShape(currentPosition)
+        points += 1
+        pointsSpan.innerHTML = points
+      } else if (key === up) {
+        let isRow8 = current.some(item => (currentPosition + item) >= cellCount - (2 * width))
+        let isRow9 = current.some(item => (currentPosition + item) >= cellCount - width)
+        let isColumn0 = current.some(item => (currentPosition + item) % width === 0)
+        let isColumn1 = current.some(item => (currentPosition + item) % width === 1)
+        let isColumn8 = current.some(item => (currentPosition + item) % width === 8)
+        let isColumn9 = current.some(item => (currentPosition + item) % width === 9)
+        rotateIndex < 3 ? future = tetriminos[rand][rotateIndex + 1] : future = tetriminos[rand][0]
+        if (rand === 1) {
+          if (rotateIndex % 2 === 0 && !isRow8 && !isRow9 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
             removeShape(currentPosition)
             rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
             current = tetriminos[rand][rotateIndex]
             addShape(currentPosition)
+          } else if (rotateIndex % 2 !== 0) {
+            if (isColumn0 && future.every(item => !cells[currentPosition + 2 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              currentPosition += 2
+              addShape(currentPosition)
+            } else if (isColumn1 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              currentPosition += 1
+              addShape(currentPosition)
+            } else if (isColumn9 && future.every(item => !cells[currentPosition - 2 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              currentPosition -= 2
+              addShape(currentPosition)
+            } else if (isColumn8 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              currentPosition -= 1
+              addShape(currentPosition)
+            } else {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
           }
-        }
-      } else if (rand === 2 || rand === 3) {
-        if (rotateIndex === 0) {
-          if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
+        } else if (rand === 2 || rand === 3) {
+          if (rotateIndex === 0) {
+            if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              currentPosition -= width
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            } else if (future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
+          } else if (rotateIndex === 1) {
+            if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              currentPosition += 1
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
+          } else if (rotateIndex === 2 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
             removeShape(currentPosition)
             rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            currentPosition -= width
             current = tetriminos[rand][rotateIndex]
             addShape(currentPosition)
-          } else if (future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
+          } else if (rotateIndex === 3) {
+            if (isColumn9 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              currentPosition -= 1
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
           }
-        } else if (rotateIndex === 1) {
-          if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+        } else if (rand === 4) {
+          if (rotateIndex === 0) {
+            if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              currentPosition -= width
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
+          } else if (rotateIndex === 1) {
+            if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              currentPosition += 1
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
+          } else if (rotateIndex === 2 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
             removeShape(currentPosition)
             rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            currentPosition += 1
             current = tetriminos[rand][rotateIndex]
             addShape(currentPosition)
-          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
+          } else if (rotateIndex === 3) {
+            if (isColumn9 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              currentPosition -= 1
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
           }
-        } else if (rotateIndex === 2 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-          removeShape(currentPosition)
-          rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-          current = tetriminos[rand][rotateIndex]
-          addShape(currentPosition)
-        } else if (rotateIndex === 3) {
-          if (isColumn9 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            currentPosition -= 1
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          }
-        }
-      } else if (rand === 4) {
-        if (rotateIndex === 0) {
-          if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            currentPosition -= width
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          }
-        } else if (rotateIndex === 1) {
-          if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            currentPosition += 1
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          }
-        } else if (rotateIndex === 2 && future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-          removeShape(currentPosition)
-          rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-          current = tetriminos[rand][rotateIndex]
-          addShape(currentPosition)
-        } else if (rotateIndex === 3) {
-          if (isColumn9 && future.every(item => !cells[currentPosition - 1 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            currentPosition -= 1
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          }
-        }
-      } else if (rand === 5 || rand === 6) {
-        if (rotateIndex % 2 === 0) {
-          if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            currentPosition -= width
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          }
-        } else if (rotateIndex % 2 !== 0) {
-          if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            currentPosition += 1
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
-          } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
-            removeShape(currentPosition)
-            rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
-            current = tetriminos[rand][rotateIndex]
-            addShape(currentPosition)
+        } else if (rand === 5 || rand === 6) {
+          if (rotateIndex % 2 === 0) {
+            if (isRow9 && future.every(item => !cells[currentPosition - width + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              currentPosition -= width
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
+          } else if (rotateIndex % 2 !== 0) {
+            if (isColumn0 && future.every(item => !cells[currentPosition + 1 + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              currentPosition += 1
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            } else if (future.every(item => !cells[currentPosition + item].classList.contains('dead'))) {
+              removeShape(currentPosition)
+              rotateIndex < 3 ? rotateIndex++ : rotateIndex = 0
+              current = tetriminos[rand][rotateIndex]
+              addShape(currentPosition)
+            }
           }
         }
       }
