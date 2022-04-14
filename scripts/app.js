@@ -247,7 +247,7 @@ function init() {
     pointsSpan.innerHTML = 0
     time = 500
     level = 1
-    level.innerHTML = level
+    levelSpan.innerHTML = level
     startBtn.disabled = false
     music.currentTime = 0
     music.pause()
