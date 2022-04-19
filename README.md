@@ -6,7 +6,6 @@ This was the first project for the Software Engineering Immersive course with GA
 Check out my version here!
 
 ## Brief:
-
 * Render a game in the browser.
 * Design a logic for the gameplay, player scoring, levels and game end.
 * Use semantic markup for HTML and CSS
@@ -15,13 +14,11 @@ Check out my version here!
 
 ## Technologies Used:
 ### Languages:
-
 * JavaScript (ES6+)
 * HTML5 & HTML5 Audio
 * CSS
 
 ### Dev Tools:
-
 * VSCode
 * Eslint
 * Git
@@ -40,6 +37,7 @@ Have a completed row be cleared and have all blocks above fall down
 
 
 ### Grid Creation:
+
 To start, I wrote up the HTML for the game based on my wireframe, then used JavaScript and DOM manipulation to both create the main grid and mini grid for the game, storing each div created as a cell within an array.
 
 
