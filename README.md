@@ -13,6 +13,7 @@ Check out my version here!
 * Deploy the game online.
 
 ## Technologies Used:
+
 ### Languages:
 * JavaScript (ES6+)
 * HTML5 & HTML5 Audio
@@ -63,6 +64,7 @@ After a tetromino is turned into a dead tetrimino I split each row into its own 
 
 
 ## Future Features
+
 If I had more time, these are the features I would have loved to incorporate next:
 
 * Hard Drop for Tetrominoes -  check the columns the current shape is in, then find which row has the highest paused cell. I would lower the current shape to that  row less the width by increasing the currentPosition value
