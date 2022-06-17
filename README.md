@@ -96,7 +96,7 @@ To allow the user to be able to move tetrominoes I had to be conscious of was mo
 
 
 ### Rotation:
-One of the more challenging parts of the game was ensuring each piece could be rotated by the player. In my solution I check to see if the rotation index is increased by 1 do any blocks contain a ‘dead’ class and if not then the rotation can be executed. I had to make individual cases for when a block is near a wall or the floor.
+One of the more challenging parts of the game was ensuring each piece could be rotated by the player. In my solution I check to see when the rotation index is increased by 1 do any blocks contain a ‘dead’ class and if not then the rotation can be executed. I had to make individual cases for when a block is near a wall or the floor.
 
 
 ### Clearing a row:
