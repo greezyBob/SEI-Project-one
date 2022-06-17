@@ -37,7 +37,7 @@ Allow user to rotate the tetrimino 90 clockwise
 Have a completed row be cleared and have all blocks above fall down
 
 
-### Grid Creation:
+### Grid Creation:
 
 To start, I wrote up the HTML for the game based on my wireframe, then used JavaScript and DOM manipulation to both create the main grid and mini grid for the game, storing each div created as a cell within an array.
 
@@ -95,7 +95,7 @@ To make the tetrimino fall down I needed to remove the tetrimino at its current 
 To allow the user to be able to move tetrominoes I had to be conscious of was movement that would wrap the tetromino on the left or right edges of the grid, and any movement into an existing tetromino. To prevent this, I used if statements that blocked movement left/right if the shape was at all present in the left/right-most column, or if its new position already contains a paused cell.
 
 
-### Rotation:
+### Rotation:
 One of the more challenging parts of the game was ensuring each piece could be rotated by the player. In my solution I check to see if the rotation index is increased by 1 do any blocks contain a ‘dead’ class and if not then the rotation can be executed. I had to make individual cases for when a block is near a wall or the floor.
 
 
