@@ -5,7 +5,7 @@ This was the first project for the Software Engineering Immersive course with GA
 
 Check out my version [here](https://greezybob.github.io/SEI-Project-one/)!
 
-## Brief:
+## Brief:
 * Render a game in the browser.
 * Design a logic for the gameplay, player scoring, levels and game end.
 * Use semantic markup for HTML and CSS
@@ -14,7 +14,7 @@ Check out my version [here](https://greezybob.github.io/SEI-Project-one/)!
 
 ## Technologies Used:
 
-### Languages:
+### Languages:
 * JavaScript (ES6+)
 * HTML5 & HTML5 Audio
 * CSS
