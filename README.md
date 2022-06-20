@@ -3,7 +3,7 @@
 ## Overview:
 This was the first project for the Software Engineering Immersive course with GA. We were given a timeline of one week to pick a game from a list of options then re-create it using HTML, CSS and JavaScript. I chose to make Tetris.
 
-Check out my version [here](https://greezybob.github.io/SEI-Project-one/)!
+Check out my version [here](https://greezybob.github.io/Tetris-City/)!
 
 ## Brief:
 * Render a game in the browser.
