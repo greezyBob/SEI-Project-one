@@ -28,17 +28,15 @@ Check out my version [here](https://greezybob.github.io/Tetris-City/)!
 * Google Chrome Dev Tools
 
 ## Approach:
-In the beginning I focused on wireframing out the layout of my game. I decided what semantic HTML elements I would use and how they would be placed in the web browser. After this step I began to write some pseudo code breaking my game down into 5 key stages
-
-### Spawn a randomly generated tetrimino
-Have the tetrimino fall to the bottom of the screen and stop
-Allow user to move the tetrimino left, right and down with collision detection on walls and other blocks
-Allow user to rotate the tetrimino 90 clockwise
-Have a completed row be cleared and have all blocks above fall down
+In the beginning I focused on wireframing out the layout of my game. I decided what semantic HTML elements I would use and how they would be placed in the web browser. After this step I began to write some pseudo code breaking my game down into 5 key stages:
+* Spawn a randomly generated tetrimino
+* Have the tetrimino fall to the bottom of the screen and stop
+* Allow user to move the tetrimino left, right and down with collision detection on walls and other blocks
+* Allow user to rotate the tetrimino 90 clockwise
+* Have a completed row be cleared and have all blocks above fall down
 
 
 ### Grid Creation:
-
 To start, I wrote up the HTML for the game based on my wireframe, then used JavaScript and DOM manipulation to both create the main grid and mini grid for the game, storing each div created as a cell within an array.
 
 
@@ -90,6 +88,22 @@ const tetrisO = [
 
 ### Falling Tetrimino:
 To make the tetrimino fall down I needed to remove the tetrimino at its current position. Increase the start position by the width of my grid and then recreate the tetromino using this new start position. I could then put this function inside a setInterval() to repeat this process every second. I also had to ensure that the function checked if any of the values in the array were equal to the bottom row of my grid and only run the falldown function if this was not the case.
+```
+function fallDown() {
+    countTimer = setInterval(() => {
+      if (current.every(item => currentPosition + item < cellCount - width && !cells[currentPosition + item + width].classList.contains('dead'))) {
+        removeShape(currentPosition)
+        currentPosition += width
+        addShape(currentPosition)
+      } else {
+        removeShape(currentPosition)
+        makeDead(currentPosition)
+        clearInterval(countTimer)
+        checkComplete()
+      }
+    }, time)
+  }
+```
 
 ### Movement:
 To allow the user to be able to move tetrominoes I had to be conscious of was movement that would wrap the tetromino on the left or right edges of the grid, and any movement into an existing tetromino. To prevent this, I used if statements that blocked movement left/right if the shape was at all present in the left/right-most column, or if its new position already contains a paused cell.
@@ -101,10 +115,40 @@ One of the more challenging parts of the game was ensuring each piece could be r
 
 ### Clearing a row:
 After a tetromino is turned into a dead tetrimino I split each row into its own array and iterate over them to see if all the items within that array contain the ‘dead’ class. If this condition is met I remove those rows and increase the points. I then have a while loop which runs until the last array which was removed contains a dead block. Inside the loop every ‘dead’ block that is left over has its position increased by the width of the grid
-
+```
+function checkComplete() {
+    const gridRow = []
+    for (let i = 0; i < cells.length; i += width) {
+      const row = cells.slice(i, i + width)
+      gridRow.push(row)
+      if (row.every(item => item.classList.contains('dead'))) {
+        row.forEach(item => item.classList.remove('dead'))
+        points += 100
+        pointsSpan.innerHTML = points
+        rowDeleted = true
+        rowDeletedIndex = i
+      }
+    }
+    if (rowDeleted) {
+      rowDeleted = false
+      soundEffect.src = './assets/audio/clear-row.wav'
+      soundEffect.play()
+      setTimeout(() => {
+        if (cells.some(item => item.classList.contains('dead'))) {
+          while (gridRow[rowDeletedIndex / width].every(item => !item.classList.contains('dead'))) {
+            for (let i = rowDeletedIndex - 1; i > -1; i--) {
+              if (cells[i].classList.contains('dead')) {
+                cells[i].classList.remove('dead')
+                cells[i + width].classList.add('dead')
+              }
+            }
+          }
+        }
+```
+## Challenges/Wins
+Clearing rows and rotating the tetriminos were the hardest parts. I was pleased with the end result however with rotation I used a lot of if else statements for every situation. I am sure my code could be refactored to a simpler/cleaner solution.
 
 ## Future Features:
-
 If I had more time, these are the features I would have loved to incorporate next:
 
 * Hard Drop for Tetrominoes -  check the columns the current shape is in, then find which row has the highest paused cell. I would lower the current shape to that  row less the width by increasing the currentPosition value
